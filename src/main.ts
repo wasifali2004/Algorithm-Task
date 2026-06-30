@@ -36,12 +36,12 @@ async function bootstrap(): Promise<void> {
   SwaggerModule.setup('api/docs', app, document);
 
   // start the server
-  const configuredPort = Number(process.env.PORT ?? 3010);
+  const configuredPort = Number(process.env.PORT ?? 3000);
   const port =
     Number.isInteger(configuredPort) && configuredPort > 0
       ? configuredPort
       : 3000;
-  await app.listen(port);
+  await app.listen(port, '0.0.0.0');
 }
 
 void bootstrap();
