@@ -2,8 +2,6 @@
 
 A NestJS and PostgreSQL wallet API with atomic transfers, idempotent retries, concurrency-safe balances, Gemini transaction categorization, correction feedback, and spending insights.
 
-New to NestJS? Read [CODE_GUIDE.md](./CODE_GUIDE.md) for a simple file-by-file explanation of the whole project.
-
 ## Stack
 
 - NestJS 11 and TypeScript
