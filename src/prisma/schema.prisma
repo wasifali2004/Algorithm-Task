@@ -1,0 +1,113 @@
+generator client {
+  provider     = "prisma-client"
+  output       = "../generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum TransferStatus {
+  PENDING   @map("pending")
+  COMPLETED @map("completed")
+  FAILED    @map("failed")
+
+  @@map("transfer_status")
+}
+
+enum TransactionType {
+  CREDIT @map("credit")
+  DEBIT  @map("debit")
+
+  @@map("transaction_type")
+}
+
+enum Category {
+  FOOD_DINING   @map("Food & Dining")
+  TRANSPORT     @map("Transport")
+  BILLS         @map("Bills")
+  SHOPPING      @map("Shopping")
+  ENTERTAINMENT @map("Entertainment")
+  SALARY        @map("Salary")
+  TRANSFERS     @map("Transfers")
+  OTHER         @map("Other")
+
+  @@map("category")
+}
+
+model User {
+  id           String   @id @default(uuid()) @db.Uuid
+  email        String   @unique @db.VarChar(320)
+  passwordHash String   @map("password_hash") @db.VarChar(255)
+  name         String   @db.VarChar(100)
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  account      Account?
+
+  @@map("users")
+}
+
+model Account {
+  id                   String        @id @default(uuid()) @db.Uuid
+  userId               String        @unique @map("user_id") @db.Uuid
+  balance              Decimal       @default(0) @db.Decimal(18, 2)
+  currency             String        @default("USD") @db.VarChar(3)
+  createdAt            DateTime      @default(now()) @map("created_at") @db.Timestamptz(3)
+  user                 User          @relation(fields: [userId], references: [id], onDelete: Restrict)
+  outgoingTransfers    Transfer[]    @relation("OutgoingTransfers")
+  incomingTransfers    Transfer[]    @relation("IncomingTransfers")
+  transactions         Transaction[]
+
+  @@map("accounts")
+}
+
+model Transfer {
+  id                String         @id @default(uuid()) @db.Uuid
+  idempotencyKey    String         @unique @map("idempotency_key") @db.Uuid
+  fromAccountId     String         @map("from_account_id") @db.Uuid
+  toAccountId       String         @map("to_account_id") @db.Uuid
+  amount            Decimal        @db.Decimal(18, 2)
+  status            TransferStatus @default(PENDING)
+  description       String?        @db.VarChar(500)
+  createdAt         DateTime       @default(now()) @map("created_at") @db.Timestamptz(3)
+  fromAccount       Account        @relation("OutgoingTransfers", fields: [fromAccountId], references: [id], onDelete: Restrict)
+  toAccount         Account        @relation("IncomingTransfers", fields: [toAccountId], references: [id], onDelete: Restrict)
+  transactions      Transaction[]
+
+  @@index([fromAccountId, createdAt])
+  @@index([toAccountId, createdAt])
+  @@map("transfers")
+}
+
+model Transaction {
+  id                  String               @id @default(uuid()) @db.Uuid
+  accountId           String               @map("account_id") @db.Uuid
+  transferId          String?              @map("transfer_id") @db.Uuid
+  type                TransactionType
+  amount              Decimal              @db.Decimal(18, 2)
+  category            Category             @default(TRANSFERS)
+  correctedCategory   Category?            @map("corrected_category")
+  description         String?              @db.VarChar(500)
+  createdAt           DateTime             @default(now()) @map("created_at") @db.Timestamptz(3)
+  account             Account              @relation(fields: [accountId], references: [id], onDelete: Restrict)
+  transfer            Transfer?            @relation(fields: [transferId], references: [id], onDelete: Restrict)
+  categoryCorrections CategoryCorrection[]
+
+  @@unique([accountId, transferId, type])
+  @@index([accountId, createdAt])
+  @@index([transferId])
+  @@map("transactions")
+}
+
+model CategoryCorrection {
+  id                String      @id @default(uuid()) @db.Uuid
+  transactionId     String      @map("transaction_id") @db.Uuid
+  originalCategory  Category    @map("original_category")
+  correctedCategory Category    @map("corrected_category")
+  createdAt         DateTime    @default(now()) @map("created_at") @db.Timestamptz(3)
+  transaction       Transaction @relation(fields: [transactionId], references: [id], onDelete: Restrict)
+
+  @@index([transactionId, createdAt])
+  @@index([createdAt])
+  @@map("category_corrections")
+}
