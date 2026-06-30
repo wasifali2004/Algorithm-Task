@@ -70,7 +70,21 @@ Protected routes use `Authorization: Bearer <accessToken>`.
 }
 ```
 
-Create a new UUID for a new logical transfer. Reuse the same UUID only when retrying that transfer. Money is returned as a decimal string, for example `"25.50"`.
+The `idempotencyKey` is not a user ID. The client creates it before sending the transfer. Create a new UUID for a new transfer and reuse the same UUID only when retrying that exact transfer.
+
+Generate one in a browser console:
+
+```js
+crypto.randomUUID()
+```
+
+Or in PowerShell:
+
+```powershell
+[guid]::NewGuid().ToString()
+```
+
+To test idempotency, execute the same request twice with the same key. Both responses should contain the same transfer ID, and the balance should change only once. Money is returned as a decimal string, for example `"25.50"`.
 
 New accounts deliberately start at zero because a public self-funding endpoint would make wallet balances meaningless. For a local demo, set a user's balance directly in a non-production database before sending a transfer.
 

@@ -15,6 +15,8 @@ export class CreateTransferDto {
   @ApiProperty({
     format: 'uuid',
     example: '6f1be2a2-d12a-4d70-a0f2-d59ca18a451d',
+    description:
+      'Client-generated UUID v4. Use a new value for a new transfer and reuse it only when retrying the same transfer. In a browser console, run crypto.randomUUID().',
   })
   @IsUUID('4', { message: 'Idempotency key must be a valid UUID' })
   idempotencyKey: string;
