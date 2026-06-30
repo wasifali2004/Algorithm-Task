@@ -11,6 +11,25 @@ export class AppController {
     private readonly configService: ConfigService,
   ) {}
 
+  @Get()
+  @ApiOperation({ summary: 'Show API testing links' })
+  @ApiOkResponse({
+    schema: {
+      example: {
+        message: 'Fintech API is running',
+        documentation: '/api/docs',
+        health: '/health',
+      },
+    },
+  })
+  home(): { message: string; documentation: string; health: string } {
+    return {
+      message: 'Fintech API is running. Open /api/docs to test it.',
+      documentation: '/api/docs',
+      health: '/health',
+    };
+  }
+
   @Get('health')
   @ApiOperation({ summary: 'Check API and database health' })
   @ApiOkResponse({
