@@ -19,6 +19,14 @@ const transactionSelect = {
   correctedCategory: true,
   description: true,
   createdAt: true,
+  categoryCorrections: {
+    orderBy: { createdAt: 'desc' as const },
+    select: {
+      originalCategory: true,
+      correctedCategory: true,
+      createdAt: true,
+    },
+  },
 } as const;
 
 @Injectable()
@@ -57,20 +65,21 @@ export class TransactionsService {
     }
 
     // save the correction and update the record
-    const [, updated] = await this.prisma.$transaction([
-      this.prisma.categoryCorrection.create({
+    const updated = await this.prisma.$transaction(async (tx) => {
+      await tx.categoryCorrection.create({
         data: {
           transactionId,
           originalCategory: oldCategory,
           correctedCategory: newCategory,
         },
-      }),
-      this.prisma.transaction.update({
+      });
+
+      return tx.transaction.update({
         where: { id: transactionId },
         data: { correctedCategory: newCategory },
         select: transactionSelect,
-      }),
-    ]);
+      });
+    });
 
     return this.toEntity(updated);
   }
@@ -83,6 +92,11 @@ export class TransactionsService {
     correctedCategory: keyof typeof CATEGORY_TO_LABEL | null;
     description: string | null;
     createdAt: Date;
+    categoryCorrections: Array<{
+      originalCategory: keyof typeof CATEGORY_TO_LABEL;
+      correctedCategory: keyof typeof CATEGORY_TO_LABEL;
+      createdAt: Date;
+    }>;
   }): TransactionEntity {
     const category = CATEGORY_TO_LABEL[transaction.category];
     const correctedCategory = transaction.correctedCategory
@@ -98,6 +112,11 @@ export class TransactionsService {
       effectiveCategory: correctedCategory ?? category,
       description: transaction.description,
       createdAt: transaction.createdAt,
+      corrections: transaction.categoryCorrections.map((correction) => ({
+        originalCategory: CATEGORY_TO_LABEL[correction.originalCategory],
+        correctedCategory: CATEGORY_TO_LABEL[correction.correctedCategory],
+        createdAt: correction.createdAt,
+      })),
     };
   }
 }

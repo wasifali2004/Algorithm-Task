@@ -2,6 +2,17 @@ import { ApiProperty } from '@nestjs/swagger';
 import { CATEGORY_LABELS } from '../../common/constants/categories';
 import { TransactionType } from '../../generated/prisma/enums';
 
+export class CategoryCorrectionEntity {
+  @ApiProperty({ enum: CATEGORY_LABELS })
+  originalCategory: string;
+
+  @ApiProperty({ enum: CATEGORY_LABELS })
+  correctedCategory: string;
+
+  @ApiProperty({ format: 'date-time' })
+  createdAt: Date;
+}
+
 export class TransactionEntity {
   @ApiProperty({ format: 'uuid' })
   id: string;
@@ -26,4 +37,7 @@ export class TransactionEntity {
 
   @ApiProperty({ format: 'date-time' })
   createdAt: Date;
+
+  @ApiProperty({ type: [CategoryCorrectionEntity] })
+  corrections: CategoryCorrectionEntity[];
 }
