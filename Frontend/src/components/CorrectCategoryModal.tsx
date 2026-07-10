@@ -20,6 +20,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { api, getApiErrorMessage } from '@/lib/api';
+import { useToastStore } from '@/lib/toast-store';
 import { CATEGORIES, type Category, type Transaction } from '@/types';
 
 type CorrectCategoryModalProps = {
@@ -36,6 +37,7 @@ export function CorrectCategoryModal({
   const [category, setCategory] = useState<Category>('Other');
   const [formError, setFormError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const showToast = useToastStore((state) => state.showToast);
   const open = Boolean(transaction);
 
   useEffect(() => {
@@ -62,8 +64,19 @@ export function CorrectCategoryModal({
       );
       onSuccess(response.data);
       onOpenChange(false);
+      showToast({
+        tone: 'success',
+        title: 'Category updated',
+        description: `Saved as ${category}. Future categorization can use this correction.`,
+      });
     } catch (error) {
-      setFormError(getApiErrorMessage(error));
+      const message = getApiErrorMessage(error);
+      setFormError(message);
+      showToast({
+        tone: 'error',
+        title: 'Category update failed',
+        description: message,
+      });
     } finally {
       setIsLoading(false);
     }

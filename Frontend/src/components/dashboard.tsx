@@ -33,6 +33,7 @@ import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { api, getApiErrorMessage } from '@/lib/api';
+import { useToastStore } from '@/lib/toast-store';
 import { useUiStore } from '@/lib/ui-store';
 import { formatDate, formatMoney } from '@/lib/utils';
 import type { Account, Transaction } from '@/types';
@@ -363,6 +364,7 @@ function SendMoneyPanel({
   const [formError, setFormError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const showToast = useToastStore((state) => state.showToast);
 
   const {
     register,
@@ -399,8 +401,19 @@ function SendMoneyPanel({
       refreshTransferKey();
       await onSuccess();
       setSuccessMessage('Transfer sent. The account balance and history are updated.');
+      showToast({
+        tone: 'success',
+        title: 'Transfer sent',
+        description: `${formatMoney(values.amount, account.currency)} was sent to ${values.toEmail}.`,
+      });
     } catch (error) {
-      setFormError(getApiErrorMessage(error));
+      const message = getApiErrorMessage(error);
+      setFormError(message);
+      showToast({
+        tone: 'error',
+        title: 'Transfer failed',
+        description: message,
+      });
     } finally {
       setIsSubmitting(false);
     }
