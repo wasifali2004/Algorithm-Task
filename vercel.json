@@ -1,5 +1,5 @@
 {
-  "installCommand": "cd Frontend && npm ci",
-  "buildCommand": "cd Frontend && npm run build",
-  "outputDirectory": "Frontend/.next"
+  "installCommand": "npm ci",
+  "buildCommand": "npm run build",
+  "outputDirectory": ".next"
 }

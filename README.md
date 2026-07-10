@@ -183,9 +183,9 @@ Configure backend service variables:
 - `GEMINI_API_KEY`
 - `PORT`
 
-Deploy the frontend with the service root set to `Frontend/` and set `NEXT_PUBLIC_API_URL` to the public backend URL.
+Deploy the frontend on Vercel with the project Root Directory set to `Frontend/` and set `NEXT_PUBLIC_API_URL` to the public backend URL.
 
-If Vercel is connected to the repository root, the committed `vercel.json` builds `Frontend/` and uses `Frontend/.next` as the output directory. This avoids Vercel falling back to a missing root `public` folder.
+The committed `vercel.json` is written for that Vercel Root Directory setting: it runs `npm ci`, `npm run build`, and uses `.next` as the output directory.
 
 ## Decisions
 
