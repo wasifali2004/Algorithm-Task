@@ -19,6 +19,11 @@ const PUBLIC_USER_SELECT = {
   createdAt: true,
 } as const;
 
+const REGISTER_USER_SELECT = {
+  ...PUBLIC_USER_SELECT,
+  account: { select: { id: true } },
+} as const;
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -52,13 +57,25 @@ export class AuthService {
           name: dto.name,
           passwordHash,
           account: {
-            create: {},
+            create: {
+              balance: new Prisma.Decimal(0),
+              currency: 'USD',
+            },
           },
         },
-        select: PUBLIC_USER_SELECT,
+        select: REGISTER_USER_SELECT,
       });
 
-      return this.createAuthResponse(user);
+      if (!user.account) {
+        throw new Error('Wallet account was not created');
+      }
+
+      return this.createAuthResponse({
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        createdAt: user.createdAt,
+      });
     } catch (error: unknown) {
       // handle two signups at once
       if (

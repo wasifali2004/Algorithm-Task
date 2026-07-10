@@ -1,11 +1,10 @@
-﻿// src/app/(auth)/register/page.tsx
+// src/app/(auth)/register/page.tsx
 'use client';
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { ArrowRight, Sparkles, WalletCards } from 'lucide-react';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/button';
@@ -13,17 +12,18 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { api, getApiErrorMessage } from '@/lib/api';
 import { useAuthStore } from '@/lib/store';
-import type { AuthResponse } from '@/types';
+import type { Account, AuthResponse } from '@/types';
 
 const registerSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
   email: z.string().email('Enter a valid email'),
-  password: z.string().min(6, 'Password must be at least 6 characters'),
+  password: z.string().min(8, 'Password must be at least 8 characters'),
 });
 
 type RegisterForm = z.infer<typeof registerSchema>;
 
 export default function RegisterPage() {
+  const id = useId();
   const router = useRouter();
   const setAuth = useAuthStore((state) => state.setAuth);
   const [formError, setFormError] = useState('');
@@ -49,6 +49,13 @@ export default function RegisterPage() {
     try {
       const response = await api.post<AuthResponse>('/auth/register', values);
       setAuth(response.data.accessToken, response.data.user);
+
+      await api.get<Account>('/accounts/me', {
+        headers: {
+          Authorization: `Bearer ${response.data.accessToken}`,
+        },
+      });
+
       router.push('/dashboard');
     } catch (error) {
       setFormError(getApiErrorMessage(error));
@@ -58,100 +65,92 @@ export default function RegisterPage() {
   }
 
   return (
-    <main className="premium-grid relative flex min-h-screen items-center justify-center overflow-hidden bg-[#020617] px-4 py-10 text-white">
-      <div className="auth-orb absolute right-1/3 top-10 h-72 w-72 rounded-full" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(2,6,23,0.96)_68%)]" />
+    <main className="flex min-h-screen items-center justify-center bg-[#f6f7fb] px-4 py-10">
+      <section className="w-full max-w-[420px] rounded-2xl border border-[#e2e8f0] bg-white p-6 shadow-[0_18px_60px_rgba(15,23,42,0.10)] sm:p-7">
+        <div className="flex flex-col items-center gap-2 text-center">
+          <div
+            className="flex size-11 shrink-0 items-center justify-center rounded-full border border-[#e2e8f0] bg-white shadow-sm"
+            aria-hidden="true"
+          >
+            <svg
+              className="stroke-[#0f172a]"
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 32 32"
+              aria-hidden="true"
+            >
+              <circle cx="16" cy="16" r="12" fill="none" strokeWidth="8" />
+            </svg>
+          </div>
 
-      <section className="relative z-10 grid w-full max-w-5xl overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.03] shadow-[0_30px_100px_rgba(0,0,0,0.45)] backdrop-blur-xl lg:grid-cols-[1fr_420px]">
-        <div className="hidden p-10 lg:flex lg:flex-col lg:justify-between">
           <div>
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-[#020617] shadow-2xl">
-              <WalletCards className="h-6 w-6" />
-            </div>
-            <h1 className="mt-8 max-w-md text-4xl font-semibold tracking-tight">
-              Create a wallet and start testing real API flows.
+            <h1 className="text-lg font-semibold tracking-tight text-[#0f172a]">
+              Create account
             </h1>
-            <p className="mt-4 max-w-md text-sm leading-6 text-slate-300">
-              Registration creates a user and wallet account in PostgreSQL, then logs you in automatically.
-            </p>
-          </div>
-
-          <div className="grid max-w-md gap-3 text-sm text-slate-300">
-            <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-              <Sparkles className="h-5 w-5 text-blue-300" />
-              Transfer categories are handled by the Gemini backed AI flow.
-            </div>
-            <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-              For funded testing, use sender@example.com / password123.
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white p-6 text-[#0f172a] sm:p-8">
-          <div className="mx-auto max-w-sm">
-            <div className="mb-8 text-center">
-              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-[#0f172a] text-white shadow-xl">
-                F
-              </div>
-              <h2 className="mt-5 text-2xl font-semibold tracking-tight">Create your wallet</h2>
-              <p className="mt-2 text-sm leading-6 text-[#64748b]">
-                Register a fresh account and go straight to the dashboard.
-              </p>
-            </div>
-
-            <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
-              <div className="space-y-2">
-                <Label htmlFor="name">Name</Label>
-                <Input id="name" placeholder="Alex Morgan" {...register('name')} />
-                {errors.name?.message ? (
-                  <p className="text-sm text-[#dc2626]">{errors.name.message}</p>
-                ) : null}
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  autoComplete="email"
-                  placeholder="alex@example.com"
-                  {...register('email')}
-                />
-                {errors.email?.message ? (
-                  <p className="text-sm text-[#dc2626]">{errors.email.message}</p>
-                ) : null}
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  autoComplete="new-password"
-                  placeholder="At least 6 characters"
-                  {...register('password')}
-                />
-                {errors.password?.message ? (
-                  <p className="text-sm text-[#dc2626]">{errors.password.message}</p>
-                ) : null}
-              </div>
-
-              {formError ? <p className="text-sm text-[#dc2626]">{formError}</p> : null}
-
-              <Button className="w-full" disabled={isLoading} type="submit">
-                {isLoading ? 'Creating account...' : 'Register'}
-                <ArrowRight className="h-4 w-4" />
-              </Button>
-            </form>
-
-            <p className="mt-6 text-center text-sm text-[#64748b]">
-              Already have an account?{' '}
-              <Link className="font-semibold text-[#2563eb]" href="/login">
-                Login
-              </Link>
+            <p className="mt-1 text-sm leading-6 text-[#64748b]">
+              Register a wallet account and continue to the dashboard.
             </p>
           </div>
         </div>
+
+        <form className="mt-6 space-y-5" onSubmit={handleSubmit(onSubmit)}>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor={`${id}-name`}>Name</Label>
+              <Input
+                id={`${id}-name`}
+                placeholder="Alex Morgan"
+                autoComplete="name"
+                {...register('name')}
+              />
+              {errors.name?.message ? (
+                <p className="text-sm text-[#dc2626]">{errors.name.message}</p>
+              ) : null}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor={`${id}-email`}>Email</Label>
+              <Input
+                id={`${id}-email`}
+                placeholder="alex@example.com"
+                type="email"
+                autoComplete="email"
+                {...register('email')}
+              />
+              {errors.email?.message ? (
+                <p className="text-sm text-[#dc2626]">{errors.email.message}</p>
+              ) : null}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor={`${id}-password`}>Password</Label>
+              <Input
+                id={`${id}-password`}
+                placeholder="At least 8 characters"
+                type="password"
+                autoComplete="new-password"
+                {...register('password')}
+              />
+              {errors.password?.message ? (
+                <p className="text-sm text-[#dc2626]">{errors.password.message}</p>
+              ) : null}
+            </div>
+          </div>
+
+          {formError ? <p className="text-sm text-[#dc2626]">{formError}</p> : null}
+
+          <Button type="submit" className="w-full" disabled={isLoading}>
+            {isLoading ? 'Creating account...' : 'Register'}
+          </Button>
+        </form>
+
+        <p className="mt-6 text-center text-sm text-[#64748b]">
+          Already have an account?{' '}
+          <Link className="font-semibold text-[#2563eb]" href="/login">
+            Login
+          </Link>
+        </p>
       </section>
     </main>
   );

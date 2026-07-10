@@ -185,6 +185,8 @@ Configure backend service variables:
 
 Deploy the frontend with the service root set to `Frontend/` and set `NEXT_PUBLIC_API_URL` to the public backend URL.
 
+If Vercel is connected to the repository root, the committed `vercel.json` builds `Frontend/` and uses `Frontend/.next` as the output directory. This avoids Vercel falling back to a missing root `public` folder.
+
 ## Decisions
 
 See [DECISIONS.md](DECISIONS.md) for correctness, concurrency, AI feedback, assumptions, tradeoffs, and intentionally omitted scope.
