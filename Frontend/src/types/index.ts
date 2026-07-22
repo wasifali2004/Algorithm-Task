@@ -1,4 +1,4 @@
-// src/types/index.ts
+
 export type AuthUser = {
   id: string;
   email: string;
