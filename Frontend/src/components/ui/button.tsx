@@ -5,7 +5,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
 const buttonVariants = cva(
-  'inline-flex cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-semibold outline-none transition duration-150 active:scale-[0.98] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-60 [&_svg]:pointer-events-none [&_svg]:shrink-0',
+  'inline-flex cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-semibold outline-none transition duration-150 active:scale-[0.99] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-60 [&_svg]:pointer-events-none [&_svg]:shrink-0',
   {
     variants: {
       variant: {
@@ -16,7 +16,7 @@ const buttonVariants = cva(
         light:
           'bg-[var(--app-surface)] text-[var(--app-text)] shadow-sm hover:bg-[var(--app-surface-soft)] focus-visible:ring-4 focus-visible:ring-[var(--app-ring)]',
         outline:
-          'border border-[var(--app-border)] bg-[var(--app-surface)] text-[var(--app-text)] shadow-sm hover:bg-[var(--app-surface-soft)] focus-visible:ring-4 focus-visible:ring-[var(--app-ring)]',
+          'border border-[var(--app-border)] bg-[var(--app-surface)] text-[var(--app-text)] hover:border-[#b8c7d0] hover:bg-[var(--app-surface-soft)] focus-visible:ring-4 focus-visible:ring-[var(--app-ring)]',
         ghost:
           'text-[var(--app-text)] hover:bg-[var(--app-surface-soft)] focus-visible:ring-4 focus-visible:ring-[var(--app-ring)]',
         danger:

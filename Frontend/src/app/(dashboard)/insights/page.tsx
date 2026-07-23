@@ -2,7 +2,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { AlertCircle, Sparkles } from 'lucide-react';
+import { AlertCircle } from 'lucide-react';
 import { AppShell } from '@/components/app-shell';
 import { InsightsView } from '@/components/InsightsView';
 import { Card } from '@/components/ui/card';
@@ -62,16 +62,15 @@ function InsightsContent() {
 
   return (
     <div className="space-y-6">
-      <div className="rounded-3xl border border-[var(--app-border)] bg-[var(--app-surface)] p-6 shadow-[var(--app-shadow)]">
-        <div className="flex items-center gap-2 text-sm font-semibold text-[var(--app-primary)]">
-          <Sparkles className="h-4 w-4" />
-          Transaction Intelligence Agent
+      <div className="rounded-xl border border-[var(--app-border)] bg-[var(--app-surface)] p-6 shadow-[var(--app-shadow)]">
+        <div className="text-sm font-semibold text-[var(--app-primary)]">
+          Financial reporting
         </div>
-        <h1 className="mt-3 text-3xl font-semibold tracking-tight text-[var(--app-text)]">
+        <h1 className="mt-2 text-2xl font-semibold tracking-[-0.025em] text-[var(--app-text)]">
           Spending insights
         </h1>
         <p className="mt-2 max-w-2xl text-sm leading-6 text-[var(--app-muted)]">
-          The totals are calculated from the database. Gemini is only used to write the summary paragraph.
+          Review category totals, monthly spending, and activity that differs from your normal account history.
         </p>
       </div>
 

@@ -113,7 +113,7 @@ export function SendMoneyModal({
             <Input
               id="toEmail"
               type="email"
-              placeholder="receiver@example.com"
+              placeholder="recipient@domain.com"
               {...register('toEmail')}
             />
             {errors.toEmail?.message ? (

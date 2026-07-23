@@ -183,14 +183,14 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               setMobileOpen(false);
             }}
           >
-            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--app-primary)] text-[var(--app-primary-contrast)] shadow-sm">
+              <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#102a43] text-white shadow-sm">
               <WalletCards className="h-5 w-5" />
             </span>
             <span>
               <span className="block text-sm font-semibold leading-4 text-[var(--app-text)]">
-                Fintech
+                Fintech Wallet
               </span>
-              <span className="text-xs text-[var(--app-muted)]">Assessment</span>
+              <span className="text-xs text-[var(--app-muted)]">Financial operations</span>
             </span>
           </Link>
 

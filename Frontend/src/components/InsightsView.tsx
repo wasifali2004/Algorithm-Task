@@ -22,7 +22,7 @@ function TransactionItem({
   currency?: string;
 }) {
   return (
-    <div className="flex items-start justify-between gap-4 rounded-3xl border border-[var(--app-border)] bg-[var(--app-surface)] p-4 shadow-sm">
+    <div className="flex items-start justify-between gap-4 rounded-xl border border-[var(--app-border)] bg-[var(--app-surface)] p-4">
       <div>
         <p className="font-semibold text-[var(--app-text)]">
           {transaction.description ?? 'Transfer'}
@@ -51,15 +51,14 @@ export function InsightsView({ insights, currency = 'USD' }: InsightsViewProps) 
 
   return (
     <div className="space-y-6">
-      <Card className="relative overflow-hidden bg-[var(--app-surface-strong)] text-[var(--app-primary-contrast)]">
-        <div className="absolute right-0 top-0 h-44 w-44 rounded-full bg-[var(--app-primary)] opacity-20 blur-3xl" />
-        <CardHeader className="relative">
-          <CardTitle className="text-[var(--app-primary-contrast)]">AI summary</CardTitle>
+      <Card className="bg-[var(--app-surface-strong)] text-[var(--app-primary-contrast)]">
+        <CardHeader>
+          <CardTitle className="text-[var(--app-primary-contrast)]">Account summary</CardTitle>
           <CardDescription className="text-[var(--app-primary-contrast)] opacity-70">
-            A readable summary generated from calculated spending data.
+            A concise overview of the calculated spending data.
           </CardDescription>
         </CardHeader>
-        <p className="relative rounded-3xl border border-white/10 bg-white/10 p-5 text-sm leading-7 text-[var(--app-primary-contrast)]">
+        <p className="rounded-lg border border-white/10 bg-white/5 p-5 text-sm leading-7 text-[var(--app-primary-contrast)]">
           {insights.summary}
         </p>
       </Card>
@@ -71,7 +70,7 @@ export function InsightsView({ insights, currency = 'USD' }: InsightsViewProps) 
         </CardHeader>
 
         {insights.categoryBreakdown.length === 0 ? (
-          <p className="rounded-3xl border border-dashed border-[var(--app-border)] bg-[var(--app-surface-soft)] p-8 text-center text-sm text-[var(--app-muted)]">
+          <p className="rounded-xl border border-dashed border-[var(--app-border)] bg-[var(--app-surface-soft)] p-8 text-center text-sm text-[var(--app-muted)]">
             No debit transactions yet, so there is no spending to show.
           </p>
         ) : (
@@ -114,7 +113,7 @@ export function InsightsView({ insights, currency = 'USD' }: InsightsViewProps) 
             <div className="grid gap-3">
               {insights.monthlyTotals.map((item) => (
                 <div
-                  className="flex items-center justify-between rounded-3xl border border-[var(--app-border)] bg-[var(--app-surface-soft)] p-4 text-sm"
+                  className="flex items-center justify-between rounded-xl border border-[var(--app-border)] bg-[var(--app-surface-soft)] p-4 text-sm"
                   key={item.month}
                 >
                   <span className="font-semibold text-[var(--app-text)]">{item.month}</span>
@@ -151,7 +150,7 @@ export function InsightsView({ insights, currency = 'USD' }: InsightsViewProps) 
         </CardHeader>
 
         {insights.unusualTransactions.length === 0 ? (
-          <p className="rounded-3xl border border-dashed border-[var(--app-border)] bg-[var(--app-surface-soft)] p-8 text-center text-sm text-[var(--app-muted)]">
+          <p className="rounded-xl border border-dashed border-[var(--app-border)] bg-[var(--app-surface-soft)] p-8 text-center text-sm text-[var(--app-muted)]">
             No unusual activity found.
           </p>
         ) : (

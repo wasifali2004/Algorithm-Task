@@ -239,7 +239,7 @@ function OverviewPanel({
         }}
       >
         <div className="p-6 sm:p-8">
-          <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+          <div>
             <div>
               <Badge className="border-[var(--app-hero-border)] bg-[var(--app-hero-panel)] text-[var(--app-hero-text)]">
                 Active account
@@ -255,26 +255,6 @@ function OverviewPanel({
               </p>
             </div>
 
-            <div className="grid gap-3 sm:grid-cols-3 lg:min-w-[420px]">
-              <div className="rounded-2xl border border-[var(--app-hero-border)] bg-[var(--app-hero-panel)] p-4">
-                <p className="text-xs text-[var(--app-hero-muted)]">Transactions</p>
-                <p className="mt-1 text-xl font-semibold text-[var(--app-hero-text)]">
-                  {transactions.length}
-                </p>
-              </div>
-              <div className="rounded-2xl border border-[var(--app-hero-border)] bg-[var(--app-hero-panel)] p-4">
-                <p className="text-xs text-[var(--app-hero-muted)]">Sent</p>
-                <p className="mt-1 text-xl font-semibold text-[var(--app-hero-text)]">
-                  {formatMoney(totals.sent, account.currency)}
-                </p>
-              </div>
-              <div className="rounded-2xl border border-[var(--app-hero-border)] bg-[var(--app-hero-panel)] p-4">
-                <p className="text-xs text-[var(--app-hero-muted)]">Received</p>
-                <p className="mt-1 text-xl font-semibold text-[var(--app-hero-text)]">
-                  {formatMoney(totals.received, account.currency)}
-                </p>
-              </div>
-            </div>
           </div>
         </div>
       </Card>
@@ -434,7 +414,7 @@ function SendMoneyPanel({
               <Label htmlFor="toEmail">Recipient email</Label>
               <Input
                 id="toEmail"
-                placeholder="receiver@example.com"
+                placeholder="recipient@domain.com"
                 type="email"
                 {...register('toEmail')}
               />
@@ -547,53 +527,32 @@ function HelpPanel() {
     <Card>
       <PanelTitle
         icon={CircleDollarSign}
-        title="Help"
-        description="Demo account details for testing transfers."
+        title="Transfer guide"
+        description="A simple workflow for sending and reviewing account activity."
       />
 
-      <div className="grid gap-4 md:grid-cols-3">
-        <div className="rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface-soft)] p-4">
-          <p className="text-sm text-[var(--app-muted)]">Sender</p>
-          <p className="mt-1 break-words font-semibold text-[var(--app-text)]">
-            sender@example.com
+      <div className="grid gap-3 text-sm md:grid-cols-3">
+        <div className="rounded-xl border border-[var(--app-border)] p-4">
+          <p className="font-semibold text-[var(--app-text)]">1. Review balance</p>
+          <p className="mt-2 leading-6 text-[var(--app-muted)]">
+            Confirm the available account balance before creating a transfer.
           </p>
         </div>
-        <div className="rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface-soft)] p-4">
-          <p className="text-sm text-[var(--app-muted)]">Receiver</p>
-          <p className="mt-1 break-words font-semibold text-[var(--app-text)]">
-            receiver@example.com
+        <div className="rounded-xl border border-[var(--app-border)] p-4">
+          <p className="font-semibold text-[var(--app-text)]">2. Enter details</p>
+          <p className="mt-2 leading-6 text-[var(--app-muted)]">
+            Add the recipient, amount, and an optional transaction note.
           </p>
         </div>
-        <div className="rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface-soft)] p-4">
-          <p className="text-sm text-[var(--app-muted)]">Password</p>
-          <p className="mt-1 break-words font-semibold text-[var(--app-text)]">
-            password123
+        <div className="rounded-xl border border-[var(--app-border)] p-4">
+          <p className="font-semibold text-[var(--app-text)]">3. Verify record</p>
+          <p className="mt-2 leading-6 text-[var(--app-muted)]">
+            Confirm the completed transfer in transaction history.
           </p>
         </div>
       </div>
 
-      <div className="mt-5 grid gap-3 text-sm md:grid-cols-3">
-        <div className="rounded-2xl border border-[var(--app-border)] p-4">
-          <p className="font-semibold text-[var(--app-text)]">1. Sign in</p>
-          <p className="mt-2 leading-6 text-[var(--app-muted)]">
-            Use the sender account to start with funded balance.
-          </p>
-        </div>
-        <div className="rounded-2xl border border-[var(--app-border)] p-4">
-          <p className="font-semibold text-[var(--app-text)]">2. Send</p>
-          <p className="mt-2 leading-6 text-[var(--app-muted)]">
-            Open Send money and transfer to the receiver email.
-          </p>
-        </div>
-        <div className="rounded-2xl border border-[var(--app-border)] p-4">
-          <p className="font-semibold text-[var(--app-text)]">3. Review</p>
-          <p className="mt-2 leading-6 text-[var(--app-muted)]">
-            Open Transactions to confirm history and fix a category.
-          </p>
-        </div>
-      </div>
-
-      <div className="mt-5 flex items-start gap-2 rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface-soft)] p-4 text-sm text-[var(--app-text)]">
+      <div className="mt-5 flex items-start gap-2 rounded-xl border border-[var(--app-border)] bg-[var(--app-surface-soft)] p-4 text-sm text-[var(--app-text)]">
         <BadgeDollarSign className="mt-0.5 h-4 w-4 text-[var(--app-primary)]" />
         Idempotency keys are generated automatically for each transfer.
       </div>
